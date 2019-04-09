@@ -23,7 +23,7 @@ RUN npm i --production -d
 #RUN npm install -g think-cli
 # 添加源代码
 COPY src /app/src
-COPY port /app/port
+# COPY port /app/port
 COPY production.js /app/production.js
 
 ENV DOCKER=true
