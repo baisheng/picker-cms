@@ -6,7 +6,8 @@ FROM mhart/alpine-node:10
 RUN sh -c "echo 'Asia/Shanghai' > /etc/timezone"
 WORKDIR /app
 # 安装npm模块
-ADD package.json /app/package.json
+# ADD package.json /app/package.json
+COPY package.json /app/package.json
 RUN npm config set registry https://registry.npm.taobao.org && \
     npm config set disturl https://npm.taobao.org/dist && \
     npm config set electron_mirror https://npm.taobao.org/mirrors/electron/ && \
@@ -14,12 +15,17 @@ RUN npm config set registry https://registry.npm.taobao.org && \
     npm config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs/
 # 使用淘宝的npm镜像
 #RUN npm install --production -d --registry=https://registry.npm.taobao.org
-RUN npm install --production -d
+RUN npm i --production -d
 
-FROM mhart/alpine-node:base-8
-WORKDIR /app
-COPY --from=0 /app .
+#FROM mhart/alpine-node:base-8
+#WORKDIR /app
+#COPY --from=0 /app .
+#RUN npm install -g think-cli
 # 添加源代码
-COPY . .
+COPY src /app/src
+COPY port /app/port
+COPY production.js /app/production.js
+
+ENV DOCKER=true
 EXPOSE 5000
 CMD ["node", "/app/production.js"]
